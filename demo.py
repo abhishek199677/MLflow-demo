@@ -16,16 +16,14 @@ import dagshub
 import logging
 
 
-dagshub.init(repo_owner='puttapoguabhishek1007', repo_name='MLflow_-demo', mlflow=True)   #Dagshub intialization
+dagshub.init(repo_owner='abhishek199677', repo_name='MLflow_-demo', mlflow=True)
 
 
-
-
-logging.basicConfig(level=logging.WARN)   #using logging 
+logging.basicConfig(level=logging.WARN)
 logger = logging.getLogger(__name__)
 
 
-def eval_metrics(actual, pred):    #using sklearn metric
+def eval_metrics(actual, pred):
     rmse = np.sqrt(mean_squared_error(actual, pred))
     mae = mean_absolute_error(actual, pred)
     r2 = r2_score(actual, pred)
@@ -39,9 +37,9 @@ if __name__ == "__main__":
 
     # Read the wine-quality csv file from the URL
     csv_url = (
-        "https://github.com/abhishek199677/MLflow_-demo/blob/main/WineQT.csv"
+        "https://github.com/abhishek199677/MLflow_-demo/blob/main/final.csv"
     )
-    try:                     #if the above url isnt working or unavailble am using try exception block
+    try:
         data = pd.read_csv(csv_url, sep=";")
     except Exception as e:
         logger.exception(
@@ -58,27 +56,26 @@ if __name__ == "__main__":
     test_y = test[["quality"]]
 
 
-    #using ElasticNet model 
+
     alpha = float(sys.argv[1]) if len(sys.argv) > 1 else 0.2
     l1_ratio = float(sys.argv[2]) if len(sys.argv) > 2 else 0.3
 
 
-#the below code is for mlflow experiment tracking
 
-    with mlflow.start_run():    #automatic experiment tracking
-        lr = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, random_state=42) #initilising the model
-        lr.fit(train_x, train_y)   #training the model
+    with mlflow.start_run():
+        lr = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, random_state=42)
+        lr.fit(train_x, train_y)
 
-        predicted_qualities = lr.predict(test_x)  #doing the prediction
+        predicted_qualities = lr.predict(test_x)
 
-        (rmse, mae, r2) = eval_metrics(test_y, predicted_qualities)  #calculating the accuracy
+        (rmse, mae, r2) = eval_metrics(test_y, predicted_qualities)
 
         print("Elasticnet model (alpha={:f}, l1_ratio={:f}):".format(alpha, l1_ratio))
         print("  RMSE: %s" % rmse)
         print("  MAE: %s" % mae)
         print("  R2: %s" % r2)
 
-        mlflow.log_param("alpha", alpha)    #using log
+        mlflow.log_param("alpha", alpha)
         mlflow.log_param("l1_ratio", l1_ratio)
         mlflow.log_metric("rmse", rmse)
         mlflow.log_metric("r2", r2)
@@ -86,15 +83,15 @@ if __name__ == "__main__":
 
         
         # For remote server only (Dagshub)
-        remote_server_uri = "https://dagshub.com/puttapoguabhishek1007/MLflow_-demo.mlflow"  #mlflow tracking remote server from dagshub
-        mlflow.set_tracking_uri(remote_server_uri) 
+        remote_server_uri = "https://dagshub.com/puttapoguabhishek1007/MLflow_-demo.mlflow"
+        mlflow.set_tracking_uri(remote_server_uri)
 
 
 
         tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
 
         # Model registry does not work with file store
-        if tracking_url_type_store != "file":   #checks wheather the url is given or not if it is not given it will save in the local machine, other wise it will save in the url itself
+        if tracking_url_type_store != "file":
             # Register the model
             # There are other ways to use the Model Registry, which depends on the use case,
             # please refer to the doc for more information:
