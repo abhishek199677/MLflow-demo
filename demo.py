@@ -1,5 +1,5 @@
-import os
-import warnings
+import os  
+import warnings 
 import sys
 import logging
 from urllib.parse import urlparse
@@ -16,7 +16,6 @@ import dagshub
 
 # Initialize DagsHub repository for tracking experiments
 dagshub.init(repo_owner='puttapoguabhishek1007', repo_name='MLflow-demo', mlflow=True)
-
 
 
 
@@ -77,13 +76,13 @@ def main():
         print(f"  MAE: {mae}")
         print(f"  R2: {r2}")
 
-        mlflow.log_param("alpha", alpha)
-        mlflow.log_param("l1_ratio", l1_ratio)
-        mlflow.log_metric("rmse", rmse)
-        mlflow.log_metric("r2", r2)
-        mlflow.log_metric("mae", mae)
+        mlflow.log_param("alpha", alpha)   #setting params
+        mlflow.log_param("l1_ratio", l1_ratio)  #setting params
+        mlflow.log_metric("rmse", rmse)  #setting metrics
+        mlflow.log_metric("r2", r2)     #setting metrics
+        mlflow.log_metric("mae", mae)     #setting metrics
 
-        # Set remote server URI for DagsHub tracking
+        # Set remote server URI for DagsHub tracking (Experimental Tracking)
         remote_server_uri = "https://dagshub.com/puttapoguabhishek1007/MLflow-demo.mlflow"
         mlflow.set_tracking_uri(remote_server_uri)
 
